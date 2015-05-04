@@ -1,5 +1,5 @@
 # Java Async HTTP Client
-A simple HTTP client that allows for both asynchronous and synchronous HTTP calls built on top of Java's `HttpURLConnection`.
+A simple asynchronous HTTP client built on top of Java's `HttpURLConnection`.
 
 This project is still being improved and major changes may occur breaking backwards compatibility.
 
@@ -10,10 +10,12 @@ Please feel free to report any issues and feel free to contribute code.
 Simply create either an `AsyncHttpClient` (asynchronous) or `HttpClient` (synchronous) instance and make requests through it with the `get()`, `post()`, `put()`, `delete()`, or `head()` methods.
 Responses are handled by callbacks through `HttpResponseHandler` usually created as an anonymous inner class of the function call.
 
+
 #### Example
 
 ```java
 String url = "https://api.twitch.tv/kraken/games/top";
+
 // Set the GET parameters
 RequestParams params = new RequestParams();
 params.put("limit", "1");
