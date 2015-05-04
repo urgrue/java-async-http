@@ -25,6 +25,26 @@ public class HttpClient {
         setCharset(DEFAULT_CHARSET);
     }
 
+    /**
+     * Read the input stream and convert to a string
+     *
+     * @param inputStream InputStream to read
+     * @return String representing entire input stream contents
+     */
+    private static String readStream(InputStream inputStream) {
+        if (inputStream == null) return "";
+        StringBuilder text = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                text.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return text.toString();
+    }
+
     protected void request(String url, HttpRequestMethod method, RequestParams params, HttpResponseHandler handler) {
 
         HttpURLConnection urlConnection = null;
@@ -142,37 +162,16 @@ public class HttpClient {
         request(url, HttpRequestMethod.PUT, params, handler);
     }
 
-    /**
-     * Read the input stream and convert to a string
-     *
-     * @param inputStream InputStream to read
-     * @return String representing entire input stream contents
-     * @throws IOException
-     */
-    private static String readStream(InputStream inputStream) {
-        if (inputStream == null) return "";
-        StringBuilder text = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                text.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return text.toString();
-    }
-
     public void setHeader(String name, String value) {
         headers.put(name, value);
     }
 
-    public void setUserAgent(String userAgent) {
-        headers.put("User-Agent", userAgent);
-    }
-
     public String getUserAgent() {
         return headers.get("User-Agent");
+    }
+
+    public void setUserAgent(String userAgent) {
+        headers.put("User-Agent", userAgent);
     }
 
     public void setCharset(String charset) {
