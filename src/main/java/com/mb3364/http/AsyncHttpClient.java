@@ -1,4 +1,4 @@
-package com.mb3364.http;
+package main.java.com.mb3364.http;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

@@ -1,4 +1,4 @@
-package com.mb3364.http;
+package main.java.com.mb3364.http;
 
 import java.util.HashMap;
 import java.util.List;

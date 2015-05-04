@@ -46,4 +46,4 @@ crashlytics.properties
 crashlytics-build.properties
 
 ## Project-specific
-src/tests/
+src/test
