@@ -1,9 +1,9 @@
 # Java Async HTTP Client
 A simple asynchronous HTTP client built on top of Java's `HttpURLConnection`.
 
-This project is still being improved and major changes may occur breaking backwards compatibility.
+This project is actively being improved and major changes may break backwards compatibility.
 
-Please feel free to report any issues and feel free to contribute code.
+Please feel free to report any issues.
 
 ## Basics
 
