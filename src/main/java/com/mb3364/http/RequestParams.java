@@ -1,4 +1,4 @@
-package main.java.com.mb3364.http;
+package com.mb3364.http;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
