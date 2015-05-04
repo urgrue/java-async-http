@@ -1,4 +1,4 @@
-package http;
+package com.mb3364.http;
 
 public class HttpResponseHandler {
 

@@ -1,4 +1,4 @@
-package http;
+package com.mb3364.http;
 
 import java.io.*;
 import java.net.HttpURLConnection;
