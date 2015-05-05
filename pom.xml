@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.mb3364.http</groupId>
-    <artifactId>async-http</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>async-http-client</artifactId>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>async-http</name>
+    <name>async-http-client</name>
     <url>https://github.com/mb3364/java-async-http</url>
 
     <properties>

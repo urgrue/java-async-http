@@ -54,6 +54,8 @@ client.get(url, params, new HttpResponseHandler() {
 
 The `RequestParams` object is used to specify the HTTP request parameters such as for GET or POST. GET parameters are automatically appended to the URL and POST parameters will be x-www-form-urlencoded and sent in the content body.
 
+## Download
+* [v1.0.0 jar](https://github.com/mb3364/java-async-http/releases/tag/v1.0.0)
 
 ## Roadmap
 
