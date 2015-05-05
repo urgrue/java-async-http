@@ -1,15 +1,9 @@
 package com.mb3364.http;
 
-public class HttpResponseHandler {
+public abstract class HttpResponseHandler {
+    public abstract void onSuccess(HttpResponse response);
 
-    public void onSuccess(HttpResponse response) {
+    public abstract void onFailure(HttpResponse response);
 
-    }
-
-    public void onFailure(HttpResponse response) {
-
-    }
-
-    public void onFailure(Throwable throwable) {
-    }
+    public abstract void onFailure(Throwable throwable);
 }

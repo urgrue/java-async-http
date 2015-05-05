@@ -166,6 +166,10 @@ public class HttpClient {
         headers.put(name, value);
     }
 
+    public void removeHeader(String name) {
+        headers.remove(name);
+    }
+
     public String getUserAgent() {
         return headers.get("User-Agent");
     }
