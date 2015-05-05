@@ -20,7 +20,7 @@ public class HttpClient {
     private int dataRetrievalTimeout = 20000;
 
     public HttpClient() {
-        headers = Collections.synchronizedMap(new LinkedHashMap<>());
+        headers = Collections.synchronizedMap(new LinkedHashMap<String, String>());
         setUserAgent(DEFAULT_USER_AGENT);
         setCharset(DEFAULT_CHARSET);
     }

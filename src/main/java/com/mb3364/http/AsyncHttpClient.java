@@ -13,7 +13,7 @@ public class AsyncHttpClient extends HttpClient {
     }
 
     @Override
-    public void delete(String url, HttpResponseHandler handler) {
+    public void delete(final String url, final HttpResponseHandler handler) {
         threadPool.execute(new Runnable() {
             @Override
             public void run() {
@@ -23,7 +23,7 @@ public class AsyncHttpClient extends HttpClient {
     }
 
     @Override
-    public void delete(String url, RequestParams params, HttpResponseHandler handler) {
+    public void delete(final String url, final RequestParams params, final HttpResponseHandler handler) {
         threadPool.execute(new Runnable() {
             @Override
             public void run() {
@@ -33,7 +33,7 @@ public class AsyncHttpClient extends HttpClient {
     }
 
     @Override
-    public void get(String url, HttpResponseHandler handler) {
+    public void get(final String url, final HttpResponseHandler handler) {
         threadPool.execute(new Runnable() {
             @Override
             public void run() {
@@ -43,7 +43,7 @@ public class AsyncHttpClient extends HttpClient {
     }
 
     @Override
-    public void get(String url, RequestParams params, HttpResponseHandler handler) {
+    public void get(final String url, final RequestParams params, final HttpResponseHandler handler) {
         threadPool.execute(new Runnable() {
             @Override
             public void run() {
@@ -53,7 +53,7 @@ public class AsyncHttpClient extends HttpClient {
     }
 
     @Override
-    public void head(String url, HttpResponseHandler handler) {
+    public void head(final String url, final HttpResponseHandler handler) {
         threadPool.execute(new Runnable() {
             @Override
             public void run() {
@@ -63,7 +63,7 @@ public class AsyncHttpClient extends HttpClient {
     }
 
     @Override
-    public void head(String url, RequestParams params, HttpResponseHandler handler) {
+    public void head(final String url, final RequestParams params, final HttpResponseHandler handler) {
         threadPool.execute(new Runnable() {
             @Override
             public void run() {
@@ -73,7 +73,7 @@ public class AsyncHttpClient extends HttpClient {
     }
 
     @Override
-    public void post(String url, HttpResponseHandler handler) {
+    public void post(final String url, final HttpResponseHandler handler) {
         threadPool.execute(new Runnable() {
             @Override
             public void run() {
@@ -83,7 +83,7 @@ public class AsyncHttpClient extends HttpClient {
     }
 
     @Override
-    public void post(String url, RequestParams params, HttpResponseHandler handler) {
+    public void post(final String url, final RequestParams params, final HttpResponseHandler handler) {
         threadPool.execute(new Runnable() {
             @Override
             public void run() {
@@ -93,7 +93,7 @@ public class AsyncHttpClient extends HttpClient {
     }
 
     @Override
-    public void put(String url, HttpResponseHandler handler) {
+    public void put(final String url, final HttpResponseHandler handler) {
         threadPool.execute(new Runnable() {
             @Override
             public void run() {
@@ -103,7 +103,7 @@ public class AsyncHttpClient extends HttpClient {
     }
 
     @Override
-    public void put(String url, RequestParams params, HttpResponseHandler handler) {
+    public void put(final String url, final RequestParams params, final HttpResponseHandler handler) {
         threadPool.execute(new Runnable() {
             @Override
             public void run() {
