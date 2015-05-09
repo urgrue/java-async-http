@@ -1,5 +1,5 @@
 # Java Async HTTP Client
-A simple asynchronous HTTP client built on top of Java's `HttpURLConnection`.
+A simple, lightweight, asynchronous HTTP client built on top of Java's `HttpURLConnection`.
 
 This project is actively being improved and major changes may break backwards compatibility.
 
@@ -59,5 +59,6 @@ The `RequestParams` object is used to specify the HTTP request parameters such a
 
 ## Roadmap
 
-* Handle chunked streaming of data for efficient file uploads/downloads.
+* Allow file uploads with form data.
 * More control over setting Content-Type.
+* Handle cookies.
