@@ -7,7 +7,7 @@ Please feel free to report any issues.
 
 ## Basics
 
-Simply create either an `AsyncHttpClient` (asynchronous) or `HttpClient` (synchronous) instance and make requests through it with the `get()`, `post()`, `put()`, `delete()`, or `head()` methods.
+Simply create either an `AsyncHttpClient` (asynchronous) or `SyncHttpClient` (synchronous) instance and make requests through it with the `get()`, `post()`, `put()`, `delete()`, or `head()` methods.
 Responses are handled by callbacks through `HttpResponseHandler` usually created as an anonymous inner class of the function call.
 
 
@@ -18,10 +18,10 @@ String url = "https://api.twitch.tv/kraken/games/top";
 
 // Set the GET parameters
 RequestParams params = new RequestParams();
-params.put("limit", "1");
-params.put("offset", "0");
+params.put("limit", 1);
+params.put("offset", 0);
 
-AsyncHttpClient client = new AsyncHttpClient();
+HttpClient client = new AsyncHttpClient();
 client.setHeader("Accept", "application/vnd.twitchtv.v3+json"); // Optional: send custom headers
 client.setUserAgent("my-java-application"); // Optional: set a custom user-agent
 

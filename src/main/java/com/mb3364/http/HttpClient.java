@@ -33,7 +33,7 @@ public abstract class HttpClient {
      * @return String representing entire InputStream contents
      * @throws IOException if unable to read stream
      */
-    private static String readStream(InputStream inputStream) throws IOException{
+    private static String readStream(InputStream inputStream) throws IOException {
         return readStream(inputStream, null); // No encoding, so read as binary data
     }
 
