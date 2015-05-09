@@ -30,17 +30,6 @@ public abstract class HttpClient {
      * Read an InputStream and convert it to a String.
      *
      * @param inputStream InputStream to read
-     * @return String representing entire InputStream contents
-     * @throws IOException if unable to read stream
-     */
-    private static String readStream(InputStream inputStream) throws IOException {
-        return readStream(inputStream, null); // No encoding, so read as binary data
-    }
-
-    /**
-     * Read an InputStream and convert it to a String.
-     *
-     * @param inputStream InputStream to read
      * @param charsetName the charset name of the content encoding
      * @return String representing entire InputStream contents
      * @throws IOException if unable to read stream
@@ -62,6 +51,19 @@ public abstract class HttpClient {
             text.append(line);
         }
         return text.toString();
+    }
+
+    private static byte[] readStreamAsBytes(InputStream inputStream) throws IOException {
+        if (inputStream == null) return new byte[0];
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024 * 32];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer, 0, buffer.length)) != -1) {
+            os.write(buffer, 0, bytesRead);
+        }
+        os.flush();
+        return os.toByteArray();
     }
 
     /**
@@ -147,11 +149,13 @@ public abstract class HttpClient {
 
             // 'Successful' response codes will be in interval [200,300)
             if (responseCode >= 200 && responseCode < 300) {
-                String responseContent = readStream(urlConnection.getInputStream(), contentEncoding);
+                byte[] responseContent = readStreamAsBytes(urlConnection.getInputStream());
+                response.setContentType(contentEncoding);
                 response.setContent(responseContent);
                 handler.onSuccess(response);
             } else {
-                String responseContent = readStream(urlConnection.getErrorStream(), contentEncoding);
+                byte[] responseContent = readStreamAsBytes(urlConnection.getInputStream());
+                response.setContentType(contentEncoding);
                 response.setContent(responseContent);
                 handler.onFailure(response);
             }

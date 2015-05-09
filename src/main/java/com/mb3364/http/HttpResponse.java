@@ -1,5 +1,7 @@
 package com.mb3364.http;
 
+import javax.print.DocFlavor;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +12,8 @@ public class HttpResponse {
     private int statusCode = -1;
     private String statusMessage = "";
     private Map<String, List<String>> headers = new HashMap<>();
-    private String content = "";
+    private byte[] content = new byte[0];
+    private String contentType = "";
 
     @Override
     public String toString() {
@@ -19,7 +22,7 @@ public class HttpResponse {
                 ", statusCode=" + statusCode +
                 ", statusMessage='" + statusMessage + '\'' +
                 ", headers=" + headers +
-                ", content='" + content + '\'' +
+                ", content=" + Arrays.toString(content) +
                 '}';
     }
 
@@ -55,11 +58,19 @@ public class HttpResponse {
         this.headers = headers;
     }
 
-    public String getContent() {
+    public byte[] getContent() {
         return content;
     }
 
-    protected void setContent(String content) {
+    protected void setContent(byte[] content) {
         this.content = content;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    protected void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }
