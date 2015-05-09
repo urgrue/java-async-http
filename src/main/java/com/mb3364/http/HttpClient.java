@@ -124,6 +124,7 @@ public abstract class HttpClient {
                 byte[] content = params.toEncodedString().getBytes();
                 urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + charset);
                 urlConnection.setRequestProperty("Content-Length", Long.toString(content.length));
+                urlConnection.setFixedLengthStreamingMode(content.length); // Stream the data so we don't run out of memory
                 try (OutputStream os = urlConnection.getOutputStream()) {
                     os.write(content);
                 }
