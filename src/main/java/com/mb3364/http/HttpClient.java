@@ -73,7 +73,6 @@ public abstract class HttpClient {
     private String extractContentEncoding(URLConnection connection) {
         String contentType = connection.getContentType();
         String charset = null;
-
         if (contentType != null) {
             for (String param : contentType.replace(" ", "").split(";")) {
                 if (param.startsWith("charset=")) {
@@ -82,7 +81,6 @@ public abstract class HttpClient {
                 }
             }
         }
-
         return charset;
     }
 

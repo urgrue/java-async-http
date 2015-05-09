@@ -11,10 +11,16 @@ public class RequestParams {
     public static final String DEFAULT_ENCODING = "UTF-8";
 
     private ConcurrentHashMap<String, String> params = new ConcurrentHashMap<>();
+
     private String encoding;
 
     public RequestParams() {
         encoding = DEFAULT_ENCODING;
+    }
+
+    public RequestParams(String key, String value) {
+        this();
+        params.put(key, value);
     }
 
     public boolean containsKey(String key) {
@@ -51,6 +57,10 @@ public class RequestParams {
 
     public void put(String key, char value) {
         params.put(key, Character.toString(value));
+    }
+
+    public void put(Map<String, String> otherMap) {
+        params.putAll(otherMap);
     }
 
     public String get(String key) {
