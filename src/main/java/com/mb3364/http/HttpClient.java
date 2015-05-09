@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HttpClient {
+public abstract class HttpClient {
 
     public static final String DEFAULT_USER_AGENT = "Java-Async-Http";
     public static final String DEFAULT_CHARSET = "UTF-8";
