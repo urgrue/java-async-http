@@ -8,41 +8,38 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HttpClient {
+public abstract class HttpClient {
 
     public static final String DEFAULT_USER_AGENT = "Java-Async-Http";
-    public static final String DEFAULT_CHARSET = "UTF-8";
 
     private final Map<String, String> headers;
 
-    private String charset;
     private int connectionTimeout = 20000;
     private int dataRetrievalTimeout = 20000;
 
     public HttpClient() {
         headers = Collections.synchronizedMap(new LinkedHashMap<String, String>());
         setUserAgent(DEFAULT_USER_AGENT);
-        setCharset(DEFAULT_CHARSET);
     }
 
     /**
-     * Read the input stream and convert to a string
+     * Reads an InputStream into a byte array.
      *
      * @param inputStream InputStream to read
-     * @return String representing entire input stream contents
+     * @return byte array representing entire InputStream contents
+     * @throws IOException if unable to read stream
      */
-    private static String readStream(InputStream inputStream) {
-        if (inputStream == null) return "";
-        StringBuilder text = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                text.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    private static byte[] readStreamAsBytes(InputStream inputStream) throws IOException {
+        if (inputStream == null) return new byte[0];
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024 * 32];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer, 0, buffer.length)) != -1) {
+            os.write(buffer, 0, bytesRead);
         }
-        return text.toString();
+        os.flush();
+        return os.toByteArray();
     }
 
     protected void request(String url, HttpRequestMethod method, RequestParams params, HttpResponseHandler handler) {
@@ -79,10 +76,10 @@ public class HttpClient {
             // POST and PUT expect an output body.
             if (method == HttpRequestMethod.POST || method == HttpRequestMethod.PUT) {
                 urlConnection.setDoOutput(true);
-                // TODO: Allow user to set content-type
                 byte[] content = params.toEncodedString().getBytes();
-                urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + charset);
+                urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + "utf-8"); // TODO: Allow user to set content-type
                 urlConnection.setRequestProperty("Content-Length", Long.toString(content.length));
+                urlConnection.setFixedLengthStreamingMode(content.length); // Stream the data so we don't run out of memory
                 try (OutputStream os = urlConnection.getOutputStream()) {
                     os.write(content);
                 }
@@ -90,27 +87,15 @@ public class HttpClient {
 
             // Response
             int responseCode = urlConnection.getResponseCode();
-            String responseMessage = urlConnection.getResponseMessage();
-
-            // Response Headers
             Map<String, List<String>> responseHeaders = urlConnection.getHeaderFields();
-
-            // Build response object
-            HttpResponse response = new HttpResponse();
-            response.setUrl(urlConnection.getURL().toString());
-            response.setStatusCode(responseCode);
-            response.setStatusMessage(responseMessage);
-            response.setHeaders(responseHeaders);
 
             // 'Successful' response codes will be in interval [200,300)
             if (responseCode >= 200 && responseCode < 300) {
-                String responseContent = readStream(urlConnection.getInputStream());
-                response.setContent(responseContent);
-                handler.onSuccess(response);
+                byte[] responseContent = readStreamAsBytes(urlConnection.getInputStream());
+                handler.onSuccess(responseCode, responseHeaders, responseContent);
             } else {
-                String responseContent = readStream(urlConnection.getErrorStream());
-                response.setContent(responseContent);
-                handler.onFailure(response);
+                byte[] responseContent = readStreamAsBytes(urlConnection.getErrorStream());
+                handler.onFailure(responseCode, responseHeaders, responseContent);
             }
 
         } catch (IOException e) {
@@ -176,10 +161,6 @@ public class HttpClient {
 
     public void setUserAgent(String userAgent) {
         headers.put("User-Agent", userAgent);
-    }
-
-    public void setCharset(String charset) {
-        this.charset = charset;
     }
 
     public int getConnectionTimeout() {
