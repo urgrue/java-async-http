@@ -22,30 +22,46 @@ params.put("limit", 1);
 params.put("offset", 0);
 
 HttpClient client = new AsyncHttpClient();
-client.setHeader("Accept", "application/vnd.twitchtv.v3+json"); // Optional: send custom headers
+client.setHeader("Accept", "application/vnd.twitchtv.v3+json"); // Optional: send custom headers, send with all future requests
 client.setUserAgent("my-java-application"); // Optional: set a custom user-agent
 
-client.get(url, params, new HttpResponseHandler() {
+client.get(url, params, new StringHttpResponseHandler() {
     @Override
-    public void onSuccess(HttpResponse response) {
-        // Successful response from the server
-        System.out.println(response.getStatusCode());
-        System.out.println(response.getStatusMessage());
-        System.out.println(response.getContent());
+    public void onSuccess(int statusCode, Map<String, List<String>> headers, String content) {
+        /* Request was successful */
     }
 
     @Override
-    public void onFailure(HttpResponse response) {
-        // The server returned an error (4xx/5xx status code)
-        System.out.println(response.getUrl());
-        System.out.println(response.getStatusCode());
-        System.out.println(response.getStatusMessage());
+    public void onFailure(int statusCode, Map<String, List<String>> headers, String content) {
+        /* Server responded with a status code 4xx or 5xx error */
     }
 
     @Override
     public void onFailure(Throwable throwable) {
-        // Something went wrong with the request and an exception was thrown
-        throwable.printStackTrace();
+        /* An exception occurred during the request. Usually unable to connect or there was an error reading the response */
+    }
+});
+```
+
+The above example reads String responses using `StringHttpResponseHandler`. It will automatically read the response encoding and encode the String automatically for you.
+
+For raw data in an array of bytes, you may use `HttpResponseHandler`,
+
+```java
+client.get(url, params, new HttpResponseHandler() {
+    @Override
+    public void onSuccess(int statusCode, Map<String, List<String>> headers, byte[] content) {
+        /* Request was successful */
+    }
+
+    @Override
+    public void onFailure(int statusCode, Map<String, List<String>> headers, byte[] content) {
+        /* Server responded with a status code 4xx or 5xx error */
+    }
+
+    @Override
+    public void onFailure(Throwable throwable) {
+        /* An exception occurred during the request. Usually unable to connect or there was an error reading the response */
     }
 });
 ```
@@ -54,11 +70,18 @@ client.get(url, params, new HttpResponseHandler() {
 
 The `RequestParams` object is used to specify the HTTP request parameters such as for GET or POST. GET parameters are automatically appended to the URL and POST parameters will be x-www-form-urlencoded and sent in the content body.
 
+## Limitations
+
+* Currently only able to send basic form data in UTF-8. Files are currently not supported.
+* All response data is buffered before the callback is fired. This means downloading large files can cause an out of memory error.
+
 ## Download
-* [v1.0.0 jar](https://github.com/mb3364/java-async-http/releases/tag/v1.0.0)
+
+* [v1.2.0 jar](https://github.com/mb3364/java-async-http/releases/tag/v1.2.0)
 
 ## Roadmap
 
 * Allow file uploads with form data.
+* Allow streaming downloads to file.
 * More control over setting Content-Type.
 * Handle cookies.
