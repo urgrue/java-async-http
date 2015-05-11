@@ -11,7 +11,7 @@ Simply create either an `AsyncHttpClient` (asynchronous) or `SyncHttpClient` (sy
 Responses are handled by callbacks through `HttpResponseHandler` usually created as an anonymous inner class of the function call.
 
 
-#### Example
+#### Examples
 
 ```java
 String url = "https://api.twitch.tv/kraken/games/top";
