@@ -66,14 +66,44 @@ client.get(url, params, new HttpResponseHandler() {
 });
 ```
 
+Downloading files is as easy as using a `FileHttpResponseHandler`:
+
+```java
+String url = "https://example.org/cool-file.zip";
+File file = new File("C:\\cool-file.zip"); // Save path
+HttpClient client = new SyncHttpClient();
+
+client.get(url, new FileHttpResponseHandler(file) {
+    @Override
+    public void onSuccess(int statusCode, Map<String, List<String>> headers, File content) {
+        /* Request was successful */
+    }
+
+    @Override
+    public void onFailure(int statusCode, Map<String, List<String>> headers, File content) {
+        /* Server responded with a status code 4xx or 5xx error */
+    }
+
+    @Override
+    public void onFailure(Throwable throwable) {
+        /* An exception occurred during the request. Usually unable to connect or there was an error reading the response */
+    }
+
+    @Override
+    public void onProgressChanged(long bytesReceived, long totalBytes) {
+        /* Track download progress. Will be called several times during file download */
+        System.out.println("Downloaded: " + bytesReceived + " / " + totalBytes);
+    }
+});
+```
+
 #### RequestParams
 
 The `RequestParams` object is used to specify the HTTP request parameters such as for GET or POST. GET parameters are automatically appended to the URL and POST parameters will be x-www-form-urlencoded and sent in the content body.
 
 ## Limitations
 
-* Currently only able to send basic form data in UTF-8. Files are currently not supported.
-* All response data is buffered before the callback is fired. This means downloading large files can cause an out of memory error.
+* Currently only able to send basic form data in UTF-8. Uploading files is not yet supported.
 
 ## Download
 
@@ -81,7 +111,7 @@ The `RequestParams` object is used to specify the HTTP request parameters such a
 
 ## Roadmap
 
+* Full JavaDocs
 * Allow file uploads with form data.
-* Allow streaming downloads to file.
 * More control over setting Content-Type.
 * Handle cookies.
