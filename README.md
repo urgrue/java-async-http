@@ -22,7 +22,7 @@ params.put("limit", 1);
 params.put("offset", 0);
 
 HttpClient client = new AsyncHttpClient();
-client.setHeader("Accept", "application/vnd.twitchtv.v3+json"); // Optional: send custom headers, send with all future requests
+client.setHeader("Accept", "application/vnd.twitchtv.v3+json"); // Optional: send custom headers; sent with all future requests
 client.setUserAgent("my-java-application"); // Optional: set a custom user-agent
 
 client.get(url, params, new StringHttpResponseHandler() {
@@ -43,7 +43,7 @@ client.get(url, params, new StringHttpResponseHandler() {
 });
 ```
 
-The above example reads String responses using `StringHttpResponseHandler`. It will automatically read the response encoding and encode the String automatically for you.
+The above example reads String responses using `StringHttpResponseHandler`. It will automatically read the response encoding and encode the String for you.
 
 For raw data in an array of bytes, you may use `HttpResponseHandler`,
 
