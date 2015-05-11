@@ -5,7 +5,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public abstract class HttpClient {
@@ -20,26 +19,6 @@ public abstract class HttpClient {
     public HttpClient() {
         headers = Collections.synchronizedMap(new LinkedHashMap<String, String>());
         setUserAgent(DEFAULT_USER_AGENT);
-    }
-
-    /**
-     * Reads an InputStream into a byte array.
-     *
-     * @param inputStream InputStream to read
-     * @return byte array representing entire InputStream contents
-     * @throws IOException if unable to read stream
-     */
-    private static byte[] readStreamAsBytes(InputStream inputStream) throws IOException {
-        if (inputStream == null) return new byte[0];
-
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024 * 32];
-        int bytesRead;
-        while ((bytesRead = inputStream.read(buffer, 0, buffer.length)) != -1) {
-            os.write(buffer, 0, bytesRead);
-        }
-        os.flush();
-        return os.toByteArray();
     }
 
     protected void request(String url, HttpRequestMethod method, RequestParams params, HttpResponseHandler handler) {
@@ -85,18 +64,8 @@ public abstract class HttpClient {
                 }
             }
 
-            // Response
-            int responseCode = urlConnection.getResponseCode();
-            Map<String, List<String>> responseHeaders = urlConnection.getHeaderFields();
-
-            // 'Successful' response codes will be in interval [200,300)
-            if (responseCode >= 200 && responseCode < 300) {
-                byte[] responseContent = readStreamAsBytes(urlConnection.getInputStream());
-                handler.onSuccess(responseCode, responseHeaders, responseContent);
-            } else {
-                byte[] responseContent = readStreamAsBytes(urlConnection.getErrorStream());
-                handler.onFailure(responseCode, responseHeaders, responseContent);
-            }
+            // Process the response in the handler because it can be done in different ways
+            handler.processResponse(urlConnection);
 
         } catch (IOException e) {
             handler.onFailure(e);

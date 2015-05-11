@@ -11,7 +11,7 @@ Simply create either an `AsyncHttpClient` (asynchronous) or `SyncHttpClient` (sy
 Responses are handled by callbacks through `HttpResponseHandler` usually created as an anonymous inner class of the function call.
 
 
-#### Example
+#### Examples
 
 ```java
 String url = "https://api.twitch.tv/kraken/games/top";
@@ -22,7 +22,7 @@ params.put("limit", 1);
 params.put("offset", 0);
 
 HttpClient client = new AsyncHttpClient();
-client.setHeader("Accept", "application/vnd.twitchtv.v3+json"); // Optional: send custom headers, send with all future requests
+client.setHeader("Accept", "application/vnd.twitchtv.v3+json"); // Optional: send custom headers; sent with all future requests
 client.setUserAgent("my-java-application"); // Optional: set a custom user-agent
 
 client.get(url, params, new StringHttpResponseHandler() {
@@ -43,7 +43,7 @@ client.get(url, params, new StringHttpResponseHandler() {
 });
 ```
 
-The above example reads String responses using `StringHttpResponseHandler`. It will automatically read the response encoding and encode the String automatically for you.
+The above example reads String responses using `StringHttpResponseHandler`. It will automatically read the response encoding and encode the String for you.
 
 For raw data in an array of bytes, you may use `HttpResponseHandler`,
 
@@ -66,14 +66,44 @@ client.get(url, params, new HttpResponseHandler() {
 });
 ```
 
+Downloading files is as easy as using a `FileHttpResponseHandler`:
+
+```java
+String url = "https://example.org/cool-file.zip";
+File file = new File("C:\\cool-file.zip"); // Save path
+HttpClient client = new SyncHttpClient();
+
+client.get(url, new FileHttpResponseHandler(file) {
+    @Override
+    public void onSuccess(int statusCode, Map<String, List<String>> headers, File content) {
+        /* Request was successful */
+    }
+
+    @Override
+    public void onFailure(int statusCode, Map<String, List<String>> headers, File content) {
+        /* Server responded with a status code 4xx or 5xx error */
+    }
+
+    @Override
+    public void onFailure(Throwable throwable) {
+        /* An exception occurred during the request. Usually unable to connect or there was an error reading the response */
+    }
+
+    @Override
+    public void onProgressChanged(long bytesReceived, long totalBytes) {
+        /* Track download progress. Will be called several times during file download */
+        System.out.println("Downloaded: " + bytesReceived + " / " + totalBytes);
+    }
+});
+```
+
 #### RequestParams
 
 The `RequestParams` object is used to specify the HTTP request parameters such as for GET or POST. GET parameters are automatically appended to the URL and POST parameters will be x-www-form-urlencoded and sent in the content body.
 
 ## Limitations
 
-* Currently only able to send basic form data in UTF-8. Files are currently not supported.
-* All response data is buffered before the callback is fired. This means downloading large files can cause an out of memory error.
+* Currently only able to send basic form data in UTF-8. Uploading files is not yet supported.
 
 ## Download
 
@@ -81,7 +111,7 @@ The `RequestParams` object is used to specify the HTTP request parameters such a
 
 ## Roadmap
 
+* Full JavaDocs
 * Allow file uploads with form data.
-* Allow streaming downloads to file.
 * More control over setting Content-Type.
 * Handle cookies.
