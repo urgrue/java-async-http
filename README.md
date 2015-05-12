@@ -81,7 +81,7 @@ client.get(url, new FileHttpResponseHandler(file) {
 
 The `RequestParams` object is used to specify HTTP request parameters such as for GET and POST. GET parameters are automatically appended to the URL and POST parameters will be sent in the content body.
 
-Upload files by placing a `File` object in the `RequestParams` object.
+Upload files by placing `File` objects in the `RequestParams` object.
 
 ```java
 File uploadFile = new File("party.png");
