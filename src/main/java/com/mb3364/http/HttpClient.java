@@ -1,6 +1,7 @@
 package com.mb3364.http;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collections;
@@ -15,6 +16,7 @@ public abstract class HttpClient {
 
     private int connectionTimeout = 20000;
     private int dataRetrievalTimeout = 20000;
+    private boolean followRedirects = true;
 
     public HttpClient() {
         headers = Collections.synchronizedMap(new LinkedHashMap<String, String>());
@@ -43,6 +45,7 @@ public abstract class HttpClient {
             // Settings
             urlConnection.setConnectTimeout(connectionTimeout);
             urlConnection.setReadTimeout(dataRetrievalTimeout);
+            urlConnection.setInstanceFollowRedirects(followRedirects);
             urlConnection.setRequestMethod(method.toString());
             urlConnection.setDoInput(true);
 
@@ -146,5 +149,13 @@ public abstract class HttpClient {
 
     public void setDataRetrievalTimeout(int dataRetrievalTimeout) {
         this.dataRetrievalTimeout = dataRetrievalTimeout;
+    }
+
+    public boolean getFollowRedirects() {
+        return followRedirects;
+    }
+
+    public void setFollowRedirects(boolean followRedirects) {
+        this.followRedirects = followRedirects;
     }
 }

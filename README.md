@@ -91,7 +91,7 @@ client.get(url, new FileHttpResponseHandler(file) {
 
     @Override
     public void onProgressChanged(long bytesReceived, long totalBytes) {
-        /* Track download progress. Will be called several times during file download */
+        /* Optional: Track download progress. Will be called several times during file download */
         System.out.println("Downloaded: " + bytesReceived + " / " + totalBytes);
     }
 });

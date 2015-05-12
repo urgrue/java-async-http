@@ -55,4 +55,4 @@ public abstract class HttpResponseHandler {
             onFailure(e);
         }
     }
- }
+}
