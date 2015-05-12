@@ -38,13 +38,13 @@ public abstract class HttpClient {
         }
 
         try {
-
             URL resourceUrl = new URL(url);
             urlConnection = (HttpURLConnection) resourceUrl.openConnection();
 
             // Settings
             urlConnection.setConnectTimeout(connectionTimeout);
             urlConnection.setReadTimeout(dataRetrievalTimeout);
+            urlConnection.setUseCaches(false);
             urlConnection.setInstanceFollowRedirects(followRedirects);
             urlConnection.setRequestMethod(method.toString());
             urlConnection.setDoInput(true);
@@ -60,18 +60,24 @@ public abstract class HttpClient {
             // POST and PUT expect an output body.
             if (method == HttpRequestMethod.POST || method == HttpRequestMethod.PUT) {
                 urlConnection.setDoOutput(true);
-                byte[] content = params.toEncodedString().getBytes();
-                urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + "utf-8"); // TODO: Allow user to set content-type
-                urlConnection.setRequestProperty("Content-Length", Long.toString(content.length));
-                urlConnection.setFixedLengthStreamingMode(content.length); // Stream the data so we don't run out of memory
-                try (OutputStream os = urlConnection.getOutputStream()) {
-                    os.write(content);
+                if (params.hasFiles()) {
+                    // Use multipart/form-data to send fields and files
+                    urlConnection.setChunkedStreamingMode(32 * 1024); // 32kb at a time
+                    MultipartWriter.write(urlConnection, params);
+                } else {
+                    // Send content as form-urlencoded
+                    byte[] content = params.toEncodedString().getBytes();
+                    urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + params.getCharset().name());
+                    urlConnection.setRequestProperty("Content-Length", Long.toString(content.length));
+                    urlConnection.setFixedLengthStreamingMode(content.length); // Stream the data so we don't run out of memory
+                    try (OutputStream os = urlConnection.getOutputStream()) {
+                        os.write(content);
+                    }
                 }
             }
 
             // Process the response in the handler because it can be done in different ways
             handler.processResponse(urlConnection);
-
             // Request finished
             handler.onFinish(urlConnection);
 
