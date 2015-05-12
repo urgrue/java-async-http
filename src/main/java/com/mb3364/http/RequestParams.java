@@ -27,6 +27,11 @@ public class RequestParams {
         stringParams.put(key, value);
     }
 
+    public RequestParams(String key, File file) {
+        this();
+        fileParams.put(key, file);
+    }
+
     public boolean containsKey(String key) {
         return stringParams.containsKey(key) || fileParams.containsKey(key);
     }

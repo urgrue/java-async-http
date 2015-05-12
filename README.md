@@ -41,7 +41,7 @@ client.get(url, params, new StringHttpResponseHandler() {
 });
 ```
 
-The above example reads String responses using `StringHttpResponseHandler`. It will automatically read the response encoding and encode the String for you.
+The above example reads String responses using `StringHttpResponseHandler`. It will automatically determine the response encoding and encode the String for you.
 
 For raw data, use `HttpResponseHandler` as it returns an array of bytes,
 
@@ -82,6 +82,11 @@ client.get(url, new FileHttpResponseHandler(file) {
 The `RequestParams` object is used to specify HTTP request parameters such as for GET and POST. GET parameters are automatically appended to the URL and POST parameters will be sent in the content body.
 
 Upload files by placing a `File` object in the `RequestParams` object.
+
+```java
+File uploadFile = new File("party.png");
+params.put("photo", uploadFile); 
+```
 
 #### HTTP Basic Authentication
 
