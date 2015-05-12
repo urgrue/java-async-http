@@ -11,6 +11,14 @@ public abstract class HttpResponseHandler {
 
     protected static int BUFFER_SIZE = 1024 * 8;
 
+    public void onStart(HttpURLConnection httpURLConnection) {
+        // Do  nothing by default
+    }
+
+    public void onFinish(HttpURLConnection httpURLConnection) {
+        // Do nothing by default
+    }
+
     public abstract void onSuccess(int statusCode, Map<String, List<String>> headers, byte[] content);
 
     public abstract void onFailure(int statusCode, Map<String, List<String>> headers, byte[] content);

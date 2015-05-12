@@ -109,6 +109,10 @@ The `RequestParams` object is used to specify the HTTP request parameters such a
 
 * [v1.2.0 jar](https://github.com/mb3364/java-async-http/releases/tag/v1.2.0)
 
+## Thanks
+
+Outward API heavily inspired by [android-async-http](https://github.com/loopj/android-async-http)
+
 ## Roadmap
 
 * Full JavaDocs

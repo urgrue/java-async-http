@@ -54,6 +54,8 @@ public abstract class HttpClient {
                 urlConnection.setRequestProperty(header.getKey(), header.getValue());
             }
 
+            handler.onStart(urlConnection);
+
             // Request Body
             // POST and PUT expect an output body.
             if (method == HttpRequestMethod.POST || method == HttpRequestMethod.PUT) {
@@ -69,6 +71,9 @@ public abstract class HttpClient {
 
             // Process the response in the handler because it can be done in different ways
             handler.processResponse(urlConnection);
+
+            // Request finished
+            handler.onFinish(urlConnection);
 
         } catch (IOException e) {
             handler.onFailure(e);
