@@ -25,7 +25,7 @@ public class MultipartWriter {
 
     public static void write(HttpURLConnection urlConnection, RequestParams requestParams) throws IOException {
         MultipartWriter mpw = new MultipartWriter(urlConnection, requestParams);
-        mpw.writeFields();
+        mpw.writeParts();
     }
 
     private MultipartWriter(HttpURLConnection urlConnection, RequestParams requestParams) throws IOException {
@@ -45,7 +45,7 @@ public class MultipartWriter {
         } catch (UnsupportedEncodingException ignored) {/* Will always succeed. */}
     }
 
-    private void writeFields() throws IOException {
+    private void writeParts() throws IOException {
         // Write fields
         for (ConcurrentHashMap.Entry<String, String> param : requestParams.stringEntrySet()) {
             add(param.getKey(), param.getValue());
