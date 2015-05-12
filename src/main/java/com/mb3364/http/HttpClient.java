@@ -158,4 +158,14 @@ public abstract class HttpClient {
     public void setFollowRedirects(boolean followRedirects) {
         this.followRedirects = followRedirects;
     }
+
+    public void setBasicAuth(String username, String password) {
+        /* This Base64 encoder is the only one available in JDK < 8 standard library */
+        String encoded = javax.xml.bind.DatatypeConverter.printBase64Binary((username + ":" + password).getBytes());
+        headers.put("Authorization", "Basic " + encoded);
+    }
+
+    public void clearBasicAuth() {
+        headers.remove("Authorization");
+    }
 }
