@@ -1,6 +1,7 @@
 package com.mb3364.http;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collections;
@@ -15,6 +16,7 @@ public abstract class HttpClient {
 
     private int connectionTimeout = 20000;
     private int dataRetrievalTimeout = 20000;
+    private boolean followRedirects = true;
 
     public HttpClient() {
         headers = Collections.synchronizedMap(new LinkedHashMap<String, String>());
@@ -36,13 +38,14 @@ public abstract class HttpClient {
         }
 
         try {
-
             URL resourceUrl = new URL(url);
             urlConnection = (HttpURLConnection) resourceUrl.openConnection();
 
             // Settings
             urlConnection.setConnectTimeout(connectionTimeout);
             urlConnection.setReadTimeout(dataRetrievalTimeout);
+            urlConnection.setUseCaches(false);
+            urlConnection.setInstanceFollowRedirects(followRedirects);
             urlConnection.setRequestMethod(method.toString());
             urlConnection.setDoInput(true);
 
@@ -51,21 +54,32 @@ public abstract class HttpClient {
                 urlConnection.setRequestProperty(header.getKey(), header.getValue());
             }
 
+            handler.onStart(urlConnection);
+
             // Request Body
             // POST and PUT expect an output body.
             if (method == HttpRequestMethod.POST || method == HttpRequestMethod.PUT) {
                 urlConnection.setDoOutput(true);
-                byte[] content = params.toEncodedString().getBytes();
-                urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + "utf-8"); // TODO: Allow user to set content-type
-                urlConnection.setRequestProperty("Content-Length", Long.toString(content.length));
-                urlConnection.setFixedLengthStreamingMode(content.length); // Stream the data so we don't run out of memory
-                try (OutputStream os = urlConnection.getOutputStream()) {
-                    os.write(content);
+                if (params.hasFiles()) {
+                    // Use multipart/form-data to send fields and files
+                    urlConnection.setChunkedStreamingMode(32 * 1024); // 32kb at a time
+                    MultipartWriter.write(urlConnection, params);
+                } else {
+                    // Send content as form-urlencoded
+                    byte[] content = params.toEncodedString().getBytes();
+                    urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + params.getCharset().name());
+                    urlConnection.setRequestProperty("Content-Length", Long.toString(content.length));
+                    urlConnection.setFixedLengthStreamingMode(content.length); // Stream the data so we don't run out of memory
+                    try (OutputStream os = urlConnection.getOutputStream()) {
+                        os.write(content);
+                    }
                 }
             }
 
             // Process the response in the handler because it can be done in different ways
             handler.processResponse(urlConnection);
+            // Request finished
+            handler.onFinish(urlConnection);
 
         } catch (IOException e) {
             handler.onFailure(e);
@@ -146,5 +160,23 @@ public abstract class HttpClient {
 
     public void setDataRetrievalTimeout(int dataRetrievalTimeout) {
         this.dataRetrievalTimeout = dataRetrievalTimeout;
+    }
+
+    public boolean getFollowRedirects() {
+        return followRedirects;
+    }
+
+    public void setFollowRedirects(boolean followRedirects) {
+        this.followRedirects = followRedirects;
+    }
+
+    public void setBasicAuth(String username, String password) {
+        /* This Base64 encoder is the only one available in JDK < 8 standard library */
+        String encoded = javax.xml.bind.DatatypeConverter.printBase64Binary((username + ":" + password).getBytes());
+        headers.put("Authorization", "Basic " + encoded);
+    }
+
+    public void clearBasicAuth() {
+        headers.remove("Authorization");
     }
 }
