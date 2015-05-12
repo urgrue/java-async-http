@@ -99,7 +99,19 @@ client.get(url, new FileHttpResponseHandler(file) {
 
 #### RequestParams
 
-The `RequestParams` object is used to specify the HTTP request parameters such as for GET or POST. GET parameters are automatically appended to the URL and POST parameters will be x-www-form-urlencoded and sent in the content body.
+The `RequestParams` object is used to specify the HTTP request parameters such as for GET and POST. GET parameters are automatically appended to the URL and POST parameters will be sent in the content body.
+
+Upload files by placing a `File` in the `RequestParams` object.
+
+#### HTTP Basic Authentication
+
+Set HTTP Basic Authentication credentials by calling `setBasicAuth()`. These credentials will be sent with all future requests.
+
+```java
+client.setBasicAuth("username", "password");
+```
+
+Clear credentials with `clearBasicAuth()`
 
 ## Limitations
 
@@ -111,11 +123,9 @@ The `RequestParams` object is used to specify the HTTP request parameters such a
 
 ## Thanks
 
-Outward API heavily inspired by [android-async-http](https://github.com/loopj/android-async-http)
+API inspired by [android-async-http](https://github.com/loopj/android-async-http)
 
 ## Roadmap
 
 * Full JavaDocs
-* Allow file uploads with form data.
-* More control over setting Content-Type.
 * Handle cookies.
