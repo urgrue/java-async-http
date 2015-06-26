@@ -15,17 +15,20 @@ public abstract class StringHttpResponseHandler extends HttpResponseHandler {
      */
     private static String extractContentCharset(Map<String, List<String>> headers) {
         List<String> contentTypes = headers.get("Content-Type");
-        String contentType = contentTypes.get(0);
-        String charset = null;
-        if (contentType != null) {
-            for (String param : contentType.replace(" ", "").split(";")) {
-                if (param.startsWith("charset=")) {
-                    charset = param.split("=", 2)[1];
-                    break;
+        if (contentTypes != null) {
+            String contentType = contentTypes.get(0);
+            String charset = null;
+            if (contentType != null) {
+                for (String param : contentType.replace(" ", "").split(";")) {
+                    if (param.startsWith("charset=")) {
+                        charset = param.split("=", 2)[1];
+                        break;
+                    }
                 }
             }
+            return charset;
         }
-        return charset;
+        return DEFAULT_CHARSET; // No content type header, return the default
     }
 
     /**
