@@ -4,6 +4,36 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The response handler for the HTTP request when requesting a file download. This class is meant to
+ * be used as an anonymous inner class when making the HTTP request and will return the content as a
+ * {@link String} object.
+ * <p />
+ * Example:
+ * <pre>
+ * client.get(url, params, new FileHttpResponseHandler(file) {
+ *     &#064;Override
+ *     public void onSuccess(int statusCode, Map<String, List<String>> headers, String content) {
+ *          // Request was successful
+ *     }
+ *
+ *     &#064;Override
+ *     public void onFailure(int statusCode, Map<String, List<String>> headers, String content) {
+ *          // Server responded with a status code 4xx or 5xx error
+ *     }
+ *
+ *     &#064;Override
+ *     public void onFailure(Throwable throwable) {
+ *          // An exception occurred during the request. Usually unable to connect or there was an error reading the response
+ *     }
+ * });
+ * </pre>
+ *
+ * @see HttpResponseHandler
+ * @see StringHttpResponseHandler
+ *
+ * @author Matthew Bell
+ */
 public abstract class StringHttpResponseHandler extends HttpResponseHandler {
 
     public static String DEFAULT_CHARSET = "UTF-8";
