@@ -104,7 +104,6 @@ client.clearBasicAuth()
 
 ## Roadmap
 
-* Full JavaDocs
 * Handle cookies
 
 ## Thanks
