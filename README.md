@@ -3,6 +3,10 @@ A simple, lightweight, asynchronous HTTP client built on top of Java's `HttpURLC
 
 Please feel free to report any issues.
 
+## Download
+
+[Download Latest](https://github.com/mb3364/java-async-http/releases)
+
 ## Basics
 
 Simply create either an `AsyncHttpClient` (asynchronous) or `SyncHttpClient` (synchronous) instance and make requests with the `get()`, `post()`, `put()`, `delete()`, or `head()` methods.
